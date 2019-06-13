@@ -164,4 +164,17 @@ RECO_rmse_results %>% knitr::kable()
 # Write out the submission.csv file
 #***********************************************************************************
 
-write.csv(pred, "submission.csv")
+write.csv(pred, "submission.csv", row.names = FALSE)
+
+#***********************************************************************************
+# Read in the saved CSV file and confirm the RMSE
+#***********************************************************************************
+
+pred2 <- read.csv("submission.csv")
+
+rmse <- RMSE(test_set[,3],pred2$x)
+
+RECO_rmse_results2 <- tibble(Method="V1 - 30 x 50 - Read.CSV",
+                            RMSE = rmse,
+                            Train_Time = round(as.numeric(train_time, units="mins"), 2))
+RECO_rmse_results2 %>% knitr::kable()
