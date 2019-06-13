@@ -167,14 +167,19 @@ RECO_rmse_results %>% knitr::kable()
 write.csv(pred, "submission.csv", row.names = FALSE)
 
 #***********************************************************************************
-# Read in the saved CSV file and confirm the RMSE
+# Read in the "rubric.csv" file and confirm the RMSE and predict against it
+# The rubric.csv file is the same as the "validation" Dataframe with only the userId, movieId, and rating
 #***********************************************************************************
 
-pred2 <- read.csv("submission.csv")
+rubric <- read.csv("rubric.csv")
+rubric <- rubric %>% as.matrix()
 
-rmse <- RMSE(test_set[,3],pred2$x)
+pred <- r$predict(data_memory(rubric[, 1], rubric[, 2], rubric[, 3]), out_memory())
+
+rmse <- RMSE(rubric[,3],pred)
 
 RECO_rmse_results2 <- tibble(Method="V1 - 30 x 50 - Read.CSV",
                             RMSE = rmse,
                             Train_Time = round(as.numeric(train_time, units="mins"), 2))
 RECO_rmse_results2 %>% knitr::kable()
+
